@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>电脑配置 3D 可视化</title>
+<script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+<style>
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif; background: #0b0f14; color: #e6edf3; }
+  header { padding: 12px 14px; background: #121821; border-bottom: 1px solid #1f2937; position: sticky; top: 0; z-index: 10; }
+  h1 { margin: 0; font-size: 16px; font-weight: 600; }
+  .controls { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+  .chip { padding: 6px 10px; border-radius: 14px; background: #1f2937; color: #cbd5e1; font-size: 12px; border: 1px solid #2a3645; cursor: pointer; user-select: none; }
+  .chip.active { background: #2563eb; color: white; border-color: #3b82f6; }
+  .chip.color { background: var(--c); color: white; border: none; }
+  .chip.color.inactive { opacity: 0.35; }
+  #plot { width: 100%; height: calc(100vh - 130px); }
+  .legend { padding: 8px 14px; font-size: 11px; color: #94a3b8; }
+  .row { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+  .label { font-size: 11px; color: #94a3b8; margin-right: 4px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>💻 配置 3D 图 · 芯片 × 内存 × SSD</h1>
+  <div class="controls">
+    <div class="row">
+      <span class="label">代:</span>
+      <span class="chip color active" data-gen="M3" style="--c:#f59e0b">M3</span>
+      <span class="chip color active" data-gen="M4" style="--c:#10b981">M4</span>
+    </div>
+    <div class="row">
+      <span class="label">着色:</span>
+      <span class="chip active" data-mode="gen">按代</span>
+      <span class="chip" data-mode="price">按价格</span>
+      <span class="chip" data-mode="value">性价比</span>
+    </div>
+  </div>
+</header>
+<div id="plot"></div>
+<div class="legend">点击点查看详情 · 双指缩放 · 单指旋转</div>
+
+<script>
+// 芯片等级 -> 数值轴（同代内不同芯片拉成连续轴）
+// M3: M3=10, M3 Pro=20, M3 Max=30；档位偏移用 +1/+2 表示同等级更高核心数
+const CHIP = {
+  "M3":         { x: 10, label: "M3" },
+  "M3 Pro":     { x: 20, label: "M3 Pro" },
+  "M3 Max":     { x: 30, label: "M3 Max" },
+  "M3 Max+":    { x: 32, label: "M3 Max (16核)" },
+  "M4":         { x: 10, label: "M4" },
+  "M4 Pro":     { x: 20, label: "M4 Pro" },
+  "M4 Pro+":    { x: 22, label: "M4 Pro (14核)" },
+  "M4 Max":     { x: 30, label: "M4 Max" },
+  "M4 Max+":    { x: 32, label: "M4 Max (16核)" },
+};
+
+// 数据（MacBook Pro 14"，¥CNY，参考官网；可以自由增删）
+const DATA = [
+  // ---- M3 代 ----
+  { gen:"M3", chip:"M3",      ram:8,  ssd:512,  price:14999, name:"MBP14 M3 8/512" },
+  { gen:"M3", chip:"M3",      ram:16, ssd:512,  price:16499, name:"MBP14 M3 16/512" },
+  { gen:"M3", chip:"M3",      ram:16, ssd:1024, price:17999, name:"MBP14 M3 16/1T" },
+  { gen:"M3", chip:"M3 Pro",  ram:18, ssd:512,  price:18999, name:"MBP14 M3 Pro 18/512" },
+  { gen:"M3", chip:"M3 Pro",  ram:18, ssd:1024, price:20499, name:"MBP14 M3 Pro 18/1T" },
+  { gen:"M3", chip:"M3 Pro",  ram:36, ssd:1024, price:23299, name:"MBP14 M3 Pro 36/1T" },
+  { gen:"M3", chip:"M3 Max",  ram:36, ssd:1024, price:27999, name:"MBP14 M3 Max 36/1T" },
+  { gen:"M3", chip:"M3 Max+", ram:48, ssd:1024, price:31499, name:"MBP14 M3 Max 48/1T" },
+  { gen:"M3", chip:"M3 Max+", ram:64, ssd:2048, price:37999, name:"MBP14 M3 Max 64/2T" },
+  // ---- M4 代 ----
+  { gen:"M4", chip:"M4",      ram:16, ssd:512,  price:14999, name:"MBP14 M4 16/512" },
+  { gen:"M4", chip:"M4",      ram:16, ssd:1024, price:16499, name:"MBP14 M4 16/1T" },
+  { gen:"M4", chip:"M4",      ram:24, ssd:1024, price:18299, name:"MBP14 M4 24/1T" },
+  { gen:"M4", chip:"M4 Pro",  ram:24, ssd:512,  price:18999, name:"MBP14 M4 Pro 24/512" },
+  { gen:"M4", chip:"M4 Pro",  ram:24, ssd:1024, price:20499, name:"MBP14 M4 Pro 24/1T" },
+  { gen:"M4", chip:"M4 Pro+", ram:48, ssd:1024, price:24299, name:"MBP14 M4 Pro 48/1T" },
+  { gen:"M4", chip:"M4 Max",  ram:36, ssd:1024, price:27999, name:"MBP14 M4 Max 36/1T" },
+  { gen:"M4", chip:"M4 Max+", ram:48, ssd:1024, price:31499, name:"MBP14 M4 Max 48/1T" },
+  { gen:"M4", chip:"M4 Max+", ram:64, ssd:2048, price:37999, name:"MBP14 M4 Max 64/2T" },
+  { gen:"M4", chip:"M4 Max+", ram:128,ssd:4096, price:52999, name:"MBP14 M4 Max 128/4T" },
+];
+
+const GEN_COLOR = { "M3": "#f59e0b", "M4": "#10b981" };
+let activeGens = new Set(["M3", "M4"]);
+let colorMode = "gen";
+
+function buildTraces() {
+  const items = DATA.filter(d => activeGens.has(d.gen));
+  const x = items.map(d => CHIP[d.chip].x);
+  const y = items.map(d => d.ram);
+  const z = items.map(d => d.ssd);
+  const text = items.map(d => `${d.name}<br>芯片: ${CHIP[d.chip].label}<br>内存: ${d.ram}GB<br>SSD: ${d.ssd}GB<br>价格: ¥${d.price.toLocaleString()}`);
+
+  let marker;
+  if (colorMode === "gen") {
+    marker = {
+      size: items.map(d => 6 + Math.log2(d.price/10000) * 4),
+      color: items.map(d => GEN_COLOR[d.gen]),
+      line: { color: "#0b0f14", width: 1 },
+      opacity: 0.9,
+    };
+  } else if (colorMode === "price") {
+    marker = {
+      size: 9,
+      color: items.map(d => d.price),
+      colorscale: "Viridis",
+      showscale: true,
+      colorbar: { title: "价格", thickness: 10, len: 0.5, x: 0.95 },
+      line: { color: "#0b0f14", width: 1 },
+    };
+  } else {
+    // 性价比：芯片分*内存*sqrt(ssd) / 价格
+    const value = items.map(d => (CHIP[d.chip].x * d.ram * Math.sqrt(d.ssd)) / d.price);
+    marker = {
+      size: 9,
+      color: value,
+      colorscale: "RdYlGn",
+      showscale: true,
+      colorbar: { title: "性价比", thickness: 10, len: 0.5, x: 0.95 },
+      line: { color: "#0b0f14", width: 1 },
+    };
+  }
+
+  return [{
+    type: "scatter3d",
+    mode: "markers",
+    x, y, z, text,
+    hovertemplate: "%{text}<extra></extra>",
+    marker,
+  }];
+}
+
+const layout = {
+  paper_bgcolor: "#0b0f14",
+  plot_bgcolor: "#0b0f14",
+  font: { color: "#cbd5e1", family: "-apple-system, PingFang SC" },
+  margin: { l: 0, r: 0, t: 0, b: 0 },
+  scene: {
+    bgcolor: "#0b0f14",
+    xaxis: {
+      title: "芯片等级",
+      tickvals: [10, 20, 30],
+      ticktext: ["基础", "Pro", "Max"],
+      gridcolor: "#1f2937", zerolinecolor: "#1f2937",
+    },
+    yaxis: {
+      title: "内存 (GB)",
+      type: "log",
+      gridcolor: "#1f2937", zerolinecolor: "#1f2937",
+    },
+    zaxis: {
+      title: "SSD (GB)",
+      type: "log",
+      gridcolor: "#1f2937", zerolinecolor: "#1f2937",
+    },
+    camera: { eye: { x: 1.6, y: 1.6, z: 1.0 } },
+  },
+  showlegend: false,
+};
+
+const config = { responsive: true, displayModeBar: false };
+
+function render() {
+  Plotly.react("plot", buildTraces(), layout, config);
+}
+
+document.querySelectorAll(".chip.color").forEach(el => {
+  el.addEventListener("click", () => {
+    const g = el.dataset.gen;
+    if (activeGens.has(g)) { activeGens.delete(g); el.classList.add("inactive"); el.classList.remove("active"); }
+    else { activeGens.add(g); el.classList.remove("inactive"); el.classList.add("active"); }
+    render();
+  });
+});
+document.querySelectorAll(".chip[data-mode]").forEach(el => {
+  el.addEventListener("click", () => {
+    document.querySelectorAll(".chip[data-mode]").forEach(x => x.classList.remove("active"));
+    el.classList.add("active");
+    colorMode = el.dataset.mode;
+    render();
+  });
+});
+
+render();
+</script>
+</body>
+</html>
