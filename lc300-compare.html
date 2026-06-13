@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>丰田 兰德酷路泽 LC300 配置对比 · 中东版</title>
+<style>
+  :root{
+    --bg:#0f1115; --panel:#161a21; --ink:#e8eaed; --muted:#9aa3af;
+    --line:#262c36; --accent:#c8a24a; --accent-soft:#3a3115;
+    --ok:#3fb27f; --no:#5a6470; --opt:#d8a23c; --hl:#1d2733;
+    --exr:#6b7280; --gxr:#3b82f6; --vxr:#a855f7; --gr:#ef4444;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.5; -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1180px; margin:0 auto; padding:24px 16px 64px}
+  header.hero{
+    background:linear-gradient(135deg,#1a1f29 0%,#10131a 60%);
+    border:1px solid var(--line); border-radius:16px; padding:26px 24px;
+    position:relative; overflow:hidden;
+  }
+  header.hero::after{
+    content:""; position:absolute; right:-40px; top:-40px; width:220px; height:220px;
+    background:radial-gradient(circle,rgba(200,162,74,.18),transparent 70%);
+  }
+  .badge{display:inline-block; font-size:12px; letter-spacing:.12em; color:var(--accent);
+    border:1px solid var(--accent-soft); background:rgba(200,162,74,.08);
+    padding:3px 10px; border-radius:999px; margin-bottom:12px}
+  h1{margin:0 0 6px; font-size:26px; font-weight:700}
+  .sub{color:var(--muted); font-size:14px; max-width:640px}
+
+  .disclaimer{
+    margin-top:14px; font-size:12.5px; color:#d7c08a;
+    background:rgba(200,162,74,.07); border:1px solid var(--accent-soft);
+    border-radius:10px; padding:10px 12px;
+  }
+
+  /* trim summary cards */
+  .cards{display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin:22px 0}
+  .card{background:var(--panel); border:1px solid var(--line); border-radius:14px;
+    padding:14px; border-top:3px solid var(--c)}
+  .card h3{margin:0 0 2px; font-size:17px; display:flex; align-items:center; gap:8px}
+  .card .tag{font-size:11px; color:var(--muted)}
+  .card p{margin:8px 0 0; font-size:12.5px; color:var(--muted)}
+  .dot{width:9px;height:9px;border-radius:50%;background:var(--c);display:inline-block}
+
+  /* controls */
+  .controls{display:flex; flex-wrap:wrap; gap:12px; align-items:center; margin:18px 0 10px}
+  .controls input[type=search]{
+    flex:1; min-width:200px; background:var(--panel); border:1px solid var(--line);
+    color:var(--ink); padding:9px 12px; border-radius:10px; font-size:14px}
+  .toggle{display:flex; align-items:center; gap:7px; font-size:13.5px; color:var(--muted);
+    cursor:pointer; user-select:none; background:var(--panel); border:1px solid var(--line);
+    padding:8px 12px; border-radius:10px}
+  .toggle input{accent-color:var(--accent)}
+
+  /* table */
+  .tablewrap{overflow-x:auto; border:1px solid var(--line); border-radius:14px; background:var(--panel)}
+  table{border-collapse:separate; border-spacing:0; width:100%; min-width:720px; font-size:13.5px}
+  th,td{padding:11px 12px; text-align:center; border-bottom:1px solid var(--line)}
+  thead th{position:sticky; top:0; z-index:3; background:#1b212b; font-weight:600; white-space:nowrap}
+  thead th .zh{display:block; font-size:11px; color:var(--muted); font-weight:400; margin-top:2px}
+  th.feat,td.feat{text-align:left; position:sticky; left:0; z-index:2; background:var(--panel);
+    color:var(--ink); min-width:172px; font-weight:500}
+  thead th.feat{z-index:4; background:#1b212b}
+  .secrow td{background:#12161d; text-align:left; font-weight:700; color:var(--accent);
+    letter-spacing:.04em; font-size:12.5px}
+  tbody tr:hover td{background:var(--hl)}
+  tbody tr:hover td.feat{background:#1b2230}
+  /* trim color accents on header underline */
+  th[data-col="0"]{border-bottom:2px solid var(--exr)}
+  th[data-col="1"]{border-bottom:2px solid var(--gxr)}
+  th[data-col="2"]{border-bottom:2px solid var(--vxr)}
+  th[data-col="3"]{border-bottom:2px solid var(--gr)}
+  td.col-focus{background:var(--hl)!important}
+  th.col-focus{box-shadow:inset 0 -3px 0 rgba(255,255,255,.25)}
+
+  .yes{color:var(--ok); font-weight:600}
+  .no{color:var(--no)}
+  .opt{color:var(--opt); font-weight:600}
+  .val{color:var(--ink)}
+  .hi{color:#fff; font-weight:600}
+
+  .legend{display:flex; flex-wrap:wrap; gap:16px; margin:14px 2px; font-size:12.5px; color:var(--muted)}
+  .legend span b{margin-right:5px}
+
+  footer{margin-top:26px; font-size:12px; color:var(--muted); line-height:1.7}
+  footer a{color:var(--accent); text-decoration:none}
+  .note-box{background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:14px 16px; margin-top:14px}
+  .note-box b{color:var(--ink)}
+
+  @media (max-width:760px){
+    .cards{grid-template-columns:repeat(2,1fr)}
+    h1{font-size:22px}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <span class="badge">TOYOTA · LAND CRUISER 300 · 中东版 GCC</span>
+    <h1>兰德酷路泽 LC300 配置对比</h1>
+    <div class="sub">中东版（平行进口最常见）四大配置一图看懂差别：<b>EXR（入门）· GXR（走量）· VXR（豪华）· GR Sport（越野旗舰）</b>。</div>
+    <div class="disclaimer">
+      ⚠️ 注意：你之前问的 <b>GLX / GXL</b> 并不是中东版的叫法 —— <b>GXL</b> 是澳洲版命名、<b>GLX</b> 见于部分其它市场；
+      国内能买到的几乎都是<b>中东版</b>，所以下表用的是真实在售的 EXR/GXR/VXR/GR 命名。
+      数据为常见配置整理，<b>年份、批次、选装不同会有差异</b>，下定前请以官方配置表或经销商实车为准。
+    </div>
+  </header>
+
+  <div class="cards" id="cards"></div>
+
+  <div class="controls">
+    <input type="search" id="search" placeholder="🔍 筛选配置项（如：差速锁 / 大灯 / 真皮 / JBL）">
+    <label class="toggle"><input type="checkbox" id="diffOnly"> 只看有差异的项</label>
+  </div>
+
+  <div class="legend">
+    <span><b class="yes">✓</b>标配</span>
+    <span><b class="opt">○</b>选装 / 视批次</span>
+    <span><b class="no">✗</b>无</span>
+    <span><b class="val">文字</b>具体规格</span>
+    <span style="color:#7c8694">点击表头列名可高亮该配置整列</span>
+  </div>
+
+  <div class="tablewrap">
+    <table id="tbl">
+      <thead>
+        <tr>
+          <th class="feat">配置项</th>
+          <th data-col="0">EXR<span class="zh">入门</span></th>
+          <th data-col="1">GXR<span class="zh">中配 · 走量</span></th>
+          <th data-col="2">VXR<span class="zh">高配 · 豪华</span></th>
+          <th data-col="3">GR Sport<span class="zh">越野旗舰</span></th>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+    </table>
+  </div>
+
+  <div class="note-box">
+    <b>🔊 关于音响功率（接上次的问题）：</b> 低配（EXR/GXR）基本是 <b>6 喇叭</b>的普通系统，高配（VXR/GR）会升级为多喇叭/品牌音响。
+    丰田<b>官方对这套音响的额定/峰值功率从不公布</b>，所以网上各种“XX 瓦”多为估算，别当真。露营时这套原厂音响也就几十瓦量级，对电瓶负担不大。
+  </div>
+
+  <footer>
+    <div id="src"></div>
+    <div style="margin-top:6px">生成日期：2026-06-13 · 仅供选车参考，不构成购车建议。</div>
+  </footer>
+
+</div>
+
+<script>
+const TRIMS = ["EXR","GXR","VXR","GR"];
+const TRIM_META = [
+  {name:"EXR", zh:"入门", c:"var(--exr)", desc:"预算型 / 公务用车。4.0L 自吸够用，配置朴素，开起来就是台“素颜”陆巡。"},
+  {name:"GXR", zh:"中配 · 走量", c:"var(--gxr)", desc:"销量主力、性价比之王。双差速锁 + 该有的都有，平行进口最常见的就是它。"},
+  {name:"VXR", zh:"高配 · 豪华", c:"var(--vxr)", desc:"满配舒适取向。真皮通风座椅、12.3 大屏、360 影像、自适应悬架，城市豪华 SUV。"},
+  {name:"GR Sport", zh:"越野旗舰", c:"var(--gr)", desc:"硬核越野。专属 3.5TT、前中后三把锁 + E-KDSS、GR 外观与运动座椅。"},
+];
+
+// 值标记：✓=标配  ✗=无  ○=选装/视批次  其余=具体规格
+const DATA = [
+  {sec:"动力总成 Powertrain", rows:[
+    {f:"发动机", v:["4.0L V6 自吸","4.0L V6 / 3.5T V6 双涡轮","3.5T V6 双涡轮","3.5T V6 双涡轮（专属）"]},
+    {f:"最大功率", v:["约 271 马力","271 / 409 马力","约 409 马力","约 409 马力"]},
+    {f:"峰值扭矩", v:["约 385 N·m","385 / 650 N·m","约 650 N·m","约 650 N·m"]},
+    {f:"变速箱", v:["10 速手自一体","10 速手自一体","10 速手自一体","10 速手自一体"]},
+    {f:"驱动形式", v:["全时四驱","全时四驱","全时四驱（托森中差）","全时四驱（托森中差）"]},
+  ]},
+  {sec:"外观 Exterior", rows:[
+    {f:"轮毂尺寸", v:["17–18 吋","18 吋","20 吋","18 吋（越野胎）"]},
+    {f:"大灯", v:["LED（基础）","全 LED","全 LED + 自适应","全 LED + GR 样式"]},
+    {f:"前格栅", v:["镀铬","银色镀铬","豪华镀铬","TOYOTA 字标专属（GR）"]},
+    {f:"侧踏板", v:["○","✓","✓","✓"]},
+    {f:"电动尾门", v:["✗","✓","✓","✓"]},
+    {f:"备胎", v:["底挂全尺寸","底挂全尺寸","底挂全尺寸","底挂全尺寸"]},
+  ]},
+  {sec:"内饰 Interior", rows:[
+    {f:"座椅材质", v:["织物","丝绒 / 真皮（高配）","真皮","真皮 + GR 运动座椅（红缝线）"]},
+    {f:"前排电动座椅", v:["○","✓","✓ 带记忆","✓ 带记忆"]},
+    {f:"座椅通风 / 加热", v:["✗","○","✓ 前排","✓ 前排"]},
+    {f:"座椅排数", v:["5 / 7 座","5 / 7 座","5 / 7 座","多为 5 座"]},
+    {f:"方向盘", v:["真皮","真皮多功能","桃木 + 真皮","GR 真皮 + 换挡拨片"]},
+    {f:"内饰饰板", v:["普通","部分木纹","实木","碳纹 / GR 专属"]},
+    {f:"中央扶手冷藏箱", v:["✗","○","✓","○"]},
+    {f:"HUD 抬头显示", v:["✗","✗","✓","○"]},
+  ]},
+  {sec:"科技 / 影音 Tech & Audio", rows:[
+    {f:"中控屏", v:["9 吋","9 / 12.3 吋","12.3 吋","12.3 吋"]},
+    {f:"仪表盘", v:["4.2 吋","4.2 / 7 吋","7 / 12.3 吋","7 吋+"]},
+    {f:"扬声器", v:["6 个","6 个","多扬声器 / 品牌音响","多扬声器 / 品牌音响"]},
+    {f:"无线充电", v:["✗","○","✓","✓"]},
+    {f:"360° 全景影像", v:["✗","○","✓","✓"]},
+    {f:"后排娱乐屏", v:["✗","✗","○","✗"]},
+  ]},
+  {sec:"越野 / 底盘 Off-road", rows:[
+    {f:"差速锁", v:["后桥","中央 + 后桥（双锁）","中央 + 后桥","前 + 中 + 后（三把锁）"]},
+    {f:"E-KDSS 电子稳定杆", v:["✗","✗","✗","✓ 专属"]},
+    {f:"多地形模式 MTS", v:["○","✓","✓","✓"]},
+    {f:"蠕行模式 Crawl", v:["✗","○","✓","✓"]},
+    {f:"坦克掉头 Turn Assist", v:["✗","○","✓","✓"]},
+    {f:"自适应可变悬架 AVS", v:["✗","✗","✓","✗"]},
+  ]},
+  {sec:"安全 Safety", rows:[
+    {f:"安全气囊", v:["8 个","8 / 10 个","10 个","10 个"]},
+    {f:"主动安全 TSS", v:["部分","部分","✓ 较全","✓ 较全"]},
+    {f:"胎压监测", v:["✓","✓","✓","✓"]},
+  ]},
+];
+
+const SOURCES = [
+  ["丰田酷路泽 LC300 3.5T VXR 对比 GXR 配置解读（汽车之家）","https://chejiahao.autohome.com.cn/info/12959863"],
+  ["Toyota Land Cruiser trims & variants（DubiCars UAE）","https://www.dubicars.com/news/toyota-land-cruiser-trims-variants-details.html"],
+  ["LC300 GR Sport 规格（Carfolio）","https://www.carfolio.com/toyota-land-cruiser-300-gr-sport-824098"],
+  ["24 款中东版 LC300 3.5T GXR 配置（汽车之家）","https://chejiahao.autohome.com.cn/info/19443135"],
+];
+
+function cell(val){
+  if(val==="✓") return '<span class="yes">✓</span>';
+  if(val==="✗") return '<span class="no">✗</span>';
+  if(val==="○") return '<span class="opt">○</span>';
+  return '<span class="val">'+val+'</span>';
+}
+
+function render(){
+  const tbody=document.getElementById('tbody');
+  const q=document.getElementById('search').value.trim().toLowerCase();
+  const diffOnly=document.getElementById('diffOnly').checked;
+  let html='';
+  for(const sec of DATA){
+    const rows=sec.rows.filter(r=>{
+      const matchQ = !q || r.f.toLowerCase().includes(q) || r.v.some(x=>x.toLowerCase().includes(q));
+      const isDiff = new Set(r.v).size>1;
+      return matchQ && (!diffOnly || isDiff);
+    });
+    if(!rows.length) continue;
+    html+='<tr class="secrow"><td colspan="5">'+sec.sec+'</td></tr>';
+    for(const r of rows){
+      html+='<tr><td class="feat">'+r.f+'</td>';
+      r.v.forEach((val,i)=>{ html+='<td data-col="'+i+'">'+cell(val)+'</td>'; });
+      html+='</tr>';
+    }
+  }
+  if(!html) html='<tr><td colspan="5" style="padding:26px;color:var(--muted)">没有匹配的配置项</td></tr>';
+  tbody.innerHTML=html;
+}
+
+function renderCards(){
+  document.getElementById('cards').innerHTML=TRIM_META.map(t=>
+    `<div class="card" style="--c:${t.c}">
+       <h3><span class="dot"></span>${t.name}</h3>
+       <div class="tag">${t.zh}</div>
+       <p>${t.desc}</p>
+     </div>`).join('');
+}
+
+function renderSources(){
+  document.getElementById('src').innerHTML='参考来源：'+
+    SOURCES.map(s=>`<a href="${s[1]}" target="_blank" rel="noopener">${s[0]}</a>`).join(' · ');
+}
+
+// 点击表头列名高亮整列
+document.getElementById('tbl').addEventListener('click',e=>{
+  const th=e.target.closest('th[data-col]');
+  if(!th) return;
+  const col=th.dataset.col;
+  const on=!th.classList.contains('col-focus');
+  document.querySelectorAll('.col-focus').forEach(el=>el.classList.remove('col-focus'));
+  if(on){
+    document.querySelectorAll('[data-col="'+col+'"]').forEach(el=>el.classList.add('col-focus'));
+  }
+});
+
+document.getElementById('search').addEventListener('input',render);
+document.getElementById('diffOnly').addEventListener('change',render);
+
+renderCards(); renderSources(); render();
+</script>
+</body>
+</html>

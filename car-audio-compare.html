@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>车载音响对比 · LC300 / Model Y / 奔驰S / 迈巴赫 / 宾利 / 劳斯莱斯</title>
+<style>
+  :root{
+    --bg:#0f1115; --panel:#161a21; --ink:#e8eaed; --muted:#9aa3af;
+    --line:#262c36; --accent:#c8a24a; --accent-soft:#3a3115; --hl:#1d2733;
+    --ok:#3fb27f; --no:#5a6470; --opt:#d8a23c;
+  }
+  *{box-sizing:border-box}
+  body{margin:0; background:var(--bg); color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.5; -webkit-font-smoothing:antialiased}
+  .wrap{max-width:1100px; margin:0 auto; padding:24px 16px 64px}
+  header.hero{background:linear-gradient(135deg,#1a1f29 0%,#10131a 60%);
+    border:1px solid var(--line); border-radius:16px; padding:26px 24px; position:relative; overflow:hidden}
+  header.hero::after{content:""; position:absolute; right:-40px; top:-40px; width:220px; height:220px;
+    background:radial-gradient(circle,rgba(200,162,74,.18),transparent 70%)}
+  .badge{display:inline-block; font-size:12px; letter-spacing:.12em; color:var(--accent);
+    border:1px solid var(--accent-soft); background:rgba(200,162,74,.08); padding:3px 10px; border-radius:999px; margin-bottom:12px}
+  h1{margin:0 0 6px; font-size:25px; font-weight:700}
+  .sub{color:var(--muted); font-size:14px; max-width:680px}
+  h2{font-size:16px; margin:30px 0 12px; color:var(--accent); letter-spacing:.03em}
+
+  /* power bar chart */
+  .chart{background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:18px 18px 10px}
+  .barrow{display:grid; grid-template-columns:148px 1fr; gap:12px; align-items:center; margin-bottom:14px}
+  .barlabel{font-size:13px; text-align:right; color:var(--ink)}
+  .barlabel small{display:block; color:var(--muted); font-size:11px}
+  .bartrack{position:relative; height:26px; background:#0e1218; border-radius:7px; overflow:hidden}
+  .bar{height:100%; border-radius:7px; display:flex; align-items:center; justify-content:flex-end;
+    padding-right:9px; font-size:12.5px; font-weight:700; color:#0d0f13; white-space:nowrap;
+    transition:width .9s cubic-bezier(.2,.7,.2,1)}
+  .bar.unknown{background:repeating-linear-gradient(45deg,#2a313c,#2a313c 7px,#222831 7px,#222831 14px);
+    color:var(--muted); justify-content:flex-start; padding-left:9px; font-weight:600}
+
+  table{border-collapse:separate; border-spacing:0; width:100%; min-width:760px; font-size:13px}
+  .tablewrap{overflow-x:auto; border:1px solid var(--line); border-radius:14px; background:var(--panel)}
+  th,td{padding:11px 12px; text-align:center; border-bottom:1px solid var(--line); vertical-align:top}
+  thead th{background:#1b212b; font-weight:600; position:sticky; top:0; white-space:nowrap}
+  th.feat,td.feat{text-align:left; position:sticky; left:0; background:var(--panel); min-width:120px; font-weight:600}
+  thead th.feat{background:#1b212b}
+  tbody tr:hover td{background:var(--hl)}
+  tbody tr:hover td.feat{background:#1b2230}
+  .car{font-weight:700}
+  .car small{display:block; color:var(--muted); font-weight:400; font-size:11px; margin-top:2px}
+  .yes{color:var(--ok); font-weight:600}
+  .no{color:var(--no); font-weight:600}
+  td .big{font-size:15px; font-weight:700}
+  .king{color:var(--accent)}
+
+  .insight{background:rgba(200,162,74,.07); border:1px solid var(--accent-soft); border-radius:12px;
+    padding:14px 16px; margin-top:18px; font-size:13.5px; color:#e9dcb6}
+  .insight b{color:#fff}
+  .links{margin-top:18px; display:flex; gap:10px; flex-wrap:wrap}
+  .links a{font-size:13px; color:var(--accent); text-decoration:none; border:1px solid var(--accent-soft);
+    background:rgba(200,162,74,.06); padding:7px 12px; border-radius:9px}
+  footer{margin-top:24px; font-size:12px; color:var(--muted); line-height:1.7}
+  footer a{color:var(--accent); text-decoration:none}
+  @media(max-width:680px){ .barrow{grid-template-columns:108px 1fr} h1{font-size:21px} }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <span class="badge">车载音响 · 账面功率与系统对比</span>
+    <h1>它们的音响，到底谁更猛？</h1>
+    <div class="sub">从你那台陆巡 LC300 一路问到 Model Y、奔驰 S、迈巴赫、宾利、劳斯莱斯 —— 这次比的是<b>音响系统</b>：
+      品牌、喇叭数、额定功率和黑科技。有意思的是：<b>越是把音响当卖点的豪华品牌，越敢把瓦数印出来</b>。</div>
+  </header>
+
+  <h2>① 额定功率排行（厂家公布值 / W）</h2>
+  <div class="chart" id="chart"></div>
+
+  <h2>② 系统细节对比</h2>
+  <div class="tablewrap">
+    <table>
+      <thead>
+        <tr>
+          <th class="feat">车型</th>
+          <th>音响品牌</th>
+          <th>喇叭数</th>
+          <th>额定功率</th>
+          <th>功放 / 声道</th>
+          <th>厂家公布功率</th>
+          <th>看家黑科技</th>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+    </table>
+  </div>
+
+  <div class="insight">
+    💡 <b>一个有意思的规律：</b>走量品牌（丰田、特斯拉）<b>从不公布</b>音响功率——Model Y 那 560W 还是第三方拆机实测出来的；
+    而用了 Burmester / Naim / Bespoke 的豪华品牌，把瓦数当卖点写进宣传册。<br>
+    但记住：<b>功率 ≠ 好听</b>。劳斯莱斯只有 1,300W，却靠极致隔音 + 双麦克风主动降噪，把整个车厢变成“录音棚”；
+    账面最猛的是宾利飞驰的 <b>Naim 2,200W / 21 声道</b>。至于你那台陆巡，原厂也就几十瓦量级——露营放歌够用，但别指望它“震”。
+  </div>
+
+  <div class="links">
+    <a href="./lc300-compare.html">← 回到 LC300 配置对比</a>
+  </div>
+
+  <footer>
+    <div id="src"></div>
+    <div style="margin-top:6px">生成日期：2026-06-13 · 数据为各车系顶配/高端音响选装的常见公布值，具体随车型年款与配置而异。</div>
+  </footer>
+
+</div>
+
+<script>
+const MAX_W = 2200;
+const CARS = [
+  {car:"丰田 LC300", sub:"VXR / GR 高配", brand:"无品牌（原厂）", spk:"6 – 14",
+   w:null, wlabel:"未公布（约几十瓦）", amp:"—", pub:false,
+   tech:"无独立功放，普通原厂系统", color:"#6b7280"},
+  {car:"特斯拉 Model Y", sub:"Premium 高配", brand:"自研（无品牌）", spk:"15",
+   w:560, wlabel:"≈560W（第三方实测）", amp:"双功放", pub:false,
+   tech:"双低音炮；功率官方不公开", color:"#e2504a"},
+  {car:"奔驰 S 级", sub:"W223", brand:"Burmester High-End 4D", spk:"31",
+   w:1750, wlabel:"1,750W", amp:"含 18.5L 低音箱", pub:true,
+   tech:"座椅声音振子(4D)、近耳扬声器、400W 独立低音", color:"#9aa3af"},
+  {car:"迈巴赫 S 级", sub:"Maybach", brand:"Burmester High-End 4D", spk:"31",
+   w:1750, wlabel:"1,750W", amp:"含 18.5L 低音箱", pub:true,
+   tech:"与 S 级顶配同款，且为标配", color:"#c8a24a"},
+  {car:"宾利 飞驰", sub:"Flying Spur", brand:"Naim for Bentley", spk:"19 (+2 振子)",
+   w:2200, wlabel:"2,200W", amp:"21 声道", pub:true,
+   tech:"BMR 平衡单元、超高音、动能低频振子（账面功率王）", color:"#1f6f43"},
+  {car:"劳斯莱斯", sub:"古思特 / 库里南", brand:"Bespoke Audio（自研）", spk:"18",
+   w:1300, wlabel:"1,300W", amp:"18 声道", pub:true,
+   tech:"车身腔体当低音炮、双麦克风主动降噪、剧院/录音棚模式", color:"#7c4fd6"},
+];
+
+const SOURCES = [
+  ["Burmester 官方 · S-Class 音响系统","https://www.burmester.de/en/automotive/mercedes-benz/s-class/"],
+  ["Mercedes-Benz · Burmester High-End 4D 说明","https://www.mercedes-benz.ca/en/owners/manuals/s-class-sedan-2022-10-z223-mbux/burmester-high-end-4d-surround-sound-system/information-on-the-burmester-high-end-4d-surround-sound-system"],
+  ["Bentley Flying Spur 音响（21 声道 2200W）","https://www.whathifi.com/reviews/naim-for-bentley-premium-audio-system-2021-bentley-flying-spur"],
+  ["Rolls-Royce / Bentley 对比（CarExpert）","https://www.carexpert.com.au/car-news/design-battle-rolls-royce-ghost-vs-bentley-continental-flying-spur"],
+  ["Tesla Model Y 音响系统拆解（BimmerTech）","https://www.bimmer-tech.net/blog/item/231-tesla-model-y-speakers-sound-system-overview"],
+];
+
+function renderChart(){
+  const el=document.getElementById('chart');
+  el.innerHTML = CARS.map(c=>{
+    const pct = c.w==null ? 14 : Math.max(8, c.w/MAX_W*100);
+    const inner = c.w==null
+      ? `<div class="bar unknown" style="width:${pct}%">未公布 ?</div>`
+      : `<div class="bar" data-w="${pct}" style="width:0%; background:${c.color}">${c.w.toLocaleString()} W</div>`;
+    return `<div class="barrow">
+      <div class="barlabel">${c.car}<small>${c.brand}</small></div>
+      <div class="bartrack">${inner}</div>
+    </div>`;
+  }).join('');
+  // animate
+  requestAnimationFrame(()=>setTimeout(()=>{
+    el.querySelectorAll('.bar[data-w]').forEach(b=>{ b.style.width=b.dataset.w+'%'; });
+  },80));
+}
+
+function renderTable(){
+  document.getElementById('tbody').innerHTML = CARS.map(c=>{
+    const king = c.w===2200 ? ' king' : '';
+    const pub = c.pub ? '<span class="yes">✓ 公布</span>' : '<span class="no">✗ 不公布</span>';
+    return `<tr>
+      <td class="feat car" style="border-left:3px solid ${c.color}">${c.car}<small>${c.sub}</small></td>
+      <td>${c.brand}</td>
+      <td><span class="big">${c.spk}</span></td>
+      <td><span class="big${king}">${c.wlabel}</span></td>
+      <td>${c.amp}</td>
+      <td>${pub}</td>
+      <td style="text-align:left; color:var(--muted); min-width:200px">${c.tech}</td>
+    </tr>`;
+  }).join('');
+}
+
+function renderSources(){
+  document.getElementById('src').innerHTML='参考来源：'+
+    SOURCES.map(s=>`<a href="${s[1]}" target="_blank" rel="noopener">${s[0]}</a>`).join(' · ');
+}
+
+renderChart(); renderTable(); renderSources();
+</script>
+</body>
+</html>
